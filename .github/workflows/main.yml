@@ -3,9 +3,13 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: 
+    - master
+    - fmt-ci
   pull_request:
-    branches: [ master ]
+    branches:
+    - master
+    - fmt-ci
 
 env:
   CARGO_TERM_COLOR: always
@@ -20,11 +24,3 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         args: --all-features -- -D warnings
-  test:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - run: docker pull docker.io/wszdexdrf/trezor_emulator
-    - run: docker run --name simulator wszdexdrf/trezor_emulator &
-    - run: docker cp ./ simulator:/rust-hwi/
-    - run: docker exec -w /rust-hwi simulator cargo test
